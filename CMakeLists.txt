@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(Piferi_Exam VERSION 0.0.1)
+project(Piferi_Exam_01 VERSION 0.0.1)
 
 # set up the markov library as a separate part of the build
 add_library(markov-lib src/MarkovManager.cpp  src/MarkovChain.cpp)
@@ -11,7 +11,7 @@ set_property(TARGET markov-expts PROPERTY CXX_STANDARD 14)
 target_link_libraries(markov-expts  markov-lib)
 
 add_subdirectory(/Applications/JUCE ./JUCE)
-juce_add_plugin(Piferi_Exam
+juce_add_plugin(Piferi_Exam_01
         # VERSION ...                               # Set this if the plugin version is different to the project version
         # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
         # ICON_SMALL ...
@@ -24,14 +24,14 @@ juce_add_plugin(Piferi_Exam
         # EDITOR_WANTS_KEYBOARD_FOCUS TRUE/FALSE    # Does the editor need keyboard focus?
         COPY_PLUGIN_AFTER_BUILD TRUE        # Should the plugin be installed to a default location after building?
         PLUGIN_MANUFACTURER_CODE Coco               # A four-character manufacturer id with at least one upper-case character
-        PLUGIN_CODE Fra1                            # A unique four-character plugin id with exactly one upper-case character
+        PLUGIN_CODE Fp00                            # A unique four-character plugin id with exactly one upper-case character
         # GarageBand 10.3 requires the first letter to be upper-case, and the remaining letters to be lower-case
         FORMATS AU VST3 Standalone                  # The formats to build. Other valid formats are: AAX Unity VST AU AUv3
-        PRODUCT_NAME "Piferi_Exam")        # The name of the final executable, which can differ from the target name
+        PRODUCT_NAME "Piferi_Exam_01")        # The name of the final executable, which can differ from the target name
 
-juce_generate_juce_header(Piferi_Exam)
+juce_generate_juce_header(Piferi_Exam_01)
 
-target_sources(Piferi_Exam
+target_sources(Piferi_Exam_01
         PRIVATE
         src/PluginEditor.cpp
         src/PluginProcessor.cpp
@@ -39,8 +39,8 @@ target_sources(Piferi_Exam
         src/MarkovChain.cpp
         )
 
-target_compile_definitions(Piferi_Exam
-        PUBLIC #
+target_compile_definitions(Piferi_Exam_01
+        PUBLIC # 
         JUCE_ALSA=1
         JUCE_DIRECTSOUND=1
         JUCE_DISABLE_CAUTIOUS_PARAMETER_ID_CHECKING=1
@@ -49,7 +49,7 @@ target_compile_definitions(Piferi_Exam
         JUCE_USE_CURL=0     # If you remove this, add `NEEDS_CURL TRUE` to the `juce_add_plugin` call
         JUCE_VST3_CAN_REPLACE_VST2=0)
 
-target_link_libraries(Piferi_Exam
+target_link_libraries(Piferi_Exam_01
         PRIVATE
         juce::juce_audio_utils
         PUBLIC
