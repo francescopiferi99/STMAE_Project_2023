@@ -25,6 +25,8 @@ void Armonizer::setOrderValue(int newValue)
 }
 
 int Armonizer::getOrder(){
+    std::cout << "HELLOOO" << std::endl;
+    std::cout << sliderValue;
     return sliderValue;
 }
 
@@ -71,4 +73,15 @@ void Armonizer::setMasterLevel(double masterLevel_)
 
 void Armonizer::setSampleRate(double sampleRate_){
     sampleRate = sampleRate_;
+}
+
+void Armonizer::createOscillator(int index, double freq) {
+    jassert(index >= 0 && index <= 128);
+    SineOscillator sineOscillator;
+    oscillators.clear();
+    double gain = 1.0;
+
+    sineOscillator.setGain(gain*30);
+    sineOscillator.setFrequency(freq, sampleRate);
+    oscillators.push_back(sineOscillator);
 }

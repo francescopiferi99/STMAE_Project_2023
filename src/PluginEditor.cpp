@@ -97,6 +97,7 @@ void ExamPifAudioProcessorEditor::sliderValueChanged(Slider *slider) {
 
 void ExamPifAudioProcessorEditor::buttonClicked(juce::Button *button) {
     if(button == &sendButton){
+        armonizer->setOrderValue(static_cast<int>(markovOrder.getValue()));
         // std::cout << armonizer->getOrder();
     }
 }

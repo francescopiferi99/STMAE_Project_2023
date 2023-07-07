@@ -12,6 +12,10 @@ SineOscillator::SineOscillator(float gain_) {
     gain = gain_;
 }
 
+void SineOscillator::setGain(float gain_){
+    gain = gain_;
+}
+
 void SineOscillator::setFrequency (float frequency, float sampleRate) {
     auto cyclesPerSample = frequency / sampleRate;
     angleDelta = cyclesPerSample * juce::MathConstants<float>::twoPi;

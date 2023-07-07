@@ -18,6 +18,7 @@ public:
     float getNextSample() noexcept;
     void updateAngle() noexcept;
     float getGain();
+    void setGain(float gain_);
 
 private:
     float currentAngle = 0.0f, angleDelta = 0.0f;

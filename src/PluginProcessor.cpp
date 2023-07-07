@@ -144,7 +144,7 @@ void ExamPifAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     bool isOn = false;
     juce::MidiBuffer processedMidi;
-    synthHandler->setSampleRate(getSampleRate());
+    armonizer->setSampleRate(getSampleRate());
 
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
@@ -190,7 +190,7 @@ void ExamPifAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
         if(message.isNoteOn()){
             int midiNote = message.getNoteNumber();
             double fundFreq = message.getMidiNoteInHertz(midiNote);
-            synthHandler->createOscillator(midiNote, fundFreq);
+            armonizer->createOscillator(midiNote, fundFreq);
         }
         else if(message.isNoteOff()){
             int midiNote = message.getNoteNumber();
@@ -198,7 +198,7 @@ void ExamPifAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
         processedMidi.addEvent(message, time);
     }
     midiMessages.swapWith(processedMidi);
-    synthHandler->getNextAudioBlock(buffer);
+    armonizer->getNextAudioBlock(buffer);
 }
 
 //==============================================================================
