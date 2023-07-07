@@ -8,6 +8,8 @@
 
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "MarkovManager.h"
+#include "MarkovChain.h"
 
 //==============================================================================
 ExamPifAudioProcessor::ExamPifAudioProcessor()
@@ -26,6 +28,7 @@ ExamPifAudioProcessor::ExamPifAudioProcessor()
     dphase = 0;
     frequency = 440;
     amp = 0;
+    count = 0;
 }
 
 ExamPifAudioProcessor::~ExamPifAudioProcessor()
@@ -139,40 +142,63 @@ void ExamPifAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
+    bool isOn = false;
+    juce::MidiBuffer processedMidi;
+    synthHandler->setSampleRate(getSampleRate());
+
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    for (int channel = 0; channel < totalNumOutputChannels; ++channel)
-    {
+    for (int channel = 0; channel < totalNumOutputChannels; ++channel){
         if (channel == 0){
             auto* channelDataL = buffer.getWritePointer (channel);
             auto* channelDataR = buffer.getWritePointer (channel+1);
             int numSamples = buffer.getNumSamples();
-            for (int sInd=0;sInd < numSamples; ++sInd){
-                channelDataL[sInd] = (float) (std::sin(phase) * 0.25);
-                channelDataR[sInd] = (float) (std::sin(phase) * 0.25);
+
+            for (int sInd = 0; sInd < numSamples; ++sInd){
+                channelDataL[sInd] = (float) (std::sin(phase) * amp);
+                channelDataR[sInd] = (float) (std::sin(phase) * amp);
                 phase += dphase;
+                if (amp > 0 && !isOn)
+                    amp *= 0.9999;  // Reduce the amplitude gradually for fade-out effect
             }
         }
     }
 
     for (const auto metadata : midiMessages){
         auto message = metadata.getMessage();
-        DBG("processBlock:: Got message " << message.getDescription());
+        const auto time = metadata.samplePosition;
+        DBG("processBlock:: Got message " << message.getNoteNumber());
         if (message.isNoteOn()){
-            amp = 0.25;
+            isOn = true;
+            amp = 1;
             frequency = juce::MidiMessage::getMidiNoteInHertz(message.getNoteNumber());
-
-
             dphase = this->getDPhase(frequency, getSampleRate());
             break;
-
         }
         if (message.isNoteOff()){
-            amp = 0;
+            // No need to change anything for the note-off event
         }
+        processedMidi.addEvent(message, time);
     }
+
+    for(const auto metadata : midiMessages){
+        auto message = metadata.getMessage();
+        const auto time = metadata.samplePosition;
+        DBG("processBlock:: Got message " << message.getNoteNumber());
+        if(message.isNoteOn()){
+            int midiNote = message.getNoteNumber();
+            double fundFreq = message.getMidiNoteInHertz(midiNote);
+            synthHandler->createOscillator(midiNote, fundFreq);
+        }
+        else if(message.isNoteOff()){
+            int midiNote = message.getNoteNumber();
+        }
+        processedMidi.addEvent(message, time);
+    }
+    midiMessages.swapWith(processedMidi);
+    synthHandler->getNextAudioBlock(buffer);
 }
 
 //==============================================================================

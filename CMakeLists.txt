@@ -37,6 +37,10 @@ target_sources(Piferi_Exam_01
         src/PluginProcessor.cpp
         src/MarkovManager.cpp
         src/MarkovChain.cpp
+        src/SineOscillator.cpp
+        src/SynthHandler.cpp
+        src/CustomOscillator.cpp
+        src/Armonizer.cpp
         )
 
 target_compile_definitions(Piferi_Exam_01

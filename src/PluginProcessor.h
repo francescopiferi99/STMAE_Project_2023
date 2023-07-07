@@ -9,7 +9,8 @@
 #pragma once
 
 #include <JuceHeader.h>
-
+#include "SynthHandler.h"
+#include "Armonizer.h"
 //==============================================================================
 /**
 */
@@ -57,11 +58,16 @@ public:
 
 public:
     void setDPhase(double freq);
+    int count;
+
 private:
     double phase;
     double dphase;
     double frequency;
     double amp;
+
+    Armonizer* armonizer = Armonizer::getArmonizer(); // Singleton
+    SynthHandler* synthHandler = SynthHandler::getSynthHandler();
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExamPifAudioProcessor)
 };

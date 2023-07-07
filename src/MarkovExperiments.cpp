@@ -20,6 +20,4 @@ int main()
         int order = mm.getOrderOfLastEvent();
         std::cout << "Next state " << next << " order " << order << std::endl;
     }
-
-
 }
