@@ -13,8 +13,9 @@ int main()
     mm.putEvent("H");
     mm.putEvent("A");
 
-    std::cout << mm.getModelAsString();
 
+    std::cout << mm.getModelAsString();
+    mm.setMaxOrder(3);
     for (auto i=0;i<50;++i){
         state_single next = mm.getEvent();
         int order = mm.getOrderOfLastEvent();

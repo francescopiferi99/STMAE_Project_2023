@@ -3,6 +3,8 @@
 //
 
 #include "Armonizer.h"
+#include "MarkovManager.h"
+
 #pragma once
 
 Armonizer* Armonizer::armonizer = NULL;
@@ -14,20 +16,35 @@ Armonizer::Armonizer() {
 Armonizer* Armonizer::getArmonizer(){
     if (armonizer == NULL) {
         armonizer = new Armonizer();
+        armonizer->setLengthOfList(3);
+        armonizer->setMaxOrder(1);
+        armonizer->exampleArmonizer();
+        armonizer->createSequence();
     }
     return armonizer;
 }
 
-void Armonizer::setOrderValue(int newValue)
+void Armonizer::setLengthOfList(int newValue)
 {
-    sliderValue = newValue;
+    length = newValue;
     updateOscillators();
 }
 
-int Armonizer::getOrder(){
-    std::cout << "HELLOOO" << std::endl;
-    std::cout << sliderValue;
-    return sliderValue;
+int Armonizer::getLength(){
+    return length;
+}
+
+void Armonizer::setMaxOrder(int newMaxOrder){
+    mm.setMaxOrder(newMaxOrder);
+}
+
+
+int Armonizer::getMaxOrder(){
+    return order;
+}
+
+int Armonizer::getVelocity() {
+    return velocity;
 }
 
 void Armonizer::updateOscillators()
@@ -35,11 +52,21 @@ void Armonizer::updateOscillators()
     // Clear existing oscillators
     oscillators.clear();
 
-    for (int i = 0; i < sliderValue; ++i)
+    for (int i = 0; i < length; ++i)
     {
         SineOscillator sineOscillator;
         oscillators.push_back(sineOscillator);
     }
+}
+
+std::vector<state_single> Armonizer::createSequence(){
+    std::vector<state_single> sequence;
+
+    for(int i = 0; i < length; i++){
+        sequence.push_back(mm.getEvent());
+        std::cout << sequence[i] << std::endl;
+    }
+    return sequence;
 }
 
 void Armonizer::getNextAudioBlock(juce::AudioBuffer<float> &bufferToFill) {
@@ -75,13 +102,39 @@ void Armonizer::setSampleRate(double sampleRate_){
     sampleRate = sampleRate_;
 }
 
-void Armonizer::createOscillator(int index, double freq) {
+void Armonizer::createOscillators(int index, double freq) {
     jassert(index >= 0 && index <= 128);
-    SineOscillator sineOscillator;
     oscillators.clear();
     double gain = 1.0;
-
-    sineOscillator.setGain(gain*30);
-    sineOscillator.setFrequency(freq, sampleRate);
-    oscillators.push_back(sineOscillator);
+    for(int i = 0; i < length; i++){
+        oscillators[i].setGain(gain*30);
+        oscillators[i].setFrequency(freq, sampleRate);
+    }
 }
+
+void Armonizer::reset() {
+    oscillators.clear();
+}
+
+void Armonizer::changeModel(const std::string& filename){
+    mm.loadModel(filename);
+}
+
+// Return the oscillator with index number equals to index
+SineOscillator Armonizer::getOscillator(int index){
+    return oscillators[index];
+}
+
+void Armonizer::exampleArmonizer(){
+    mm.reset();
+    mm.putEvent("A");
+    mm.putEvent("B");
+    mm.putEvent("C");
+    mm.putEvent("A");
+    mm.putEvent("B");
+    mm.putEvent("H");
+    mm.putEvent("H");
+    mm.putEvent("A");
+}
+
+

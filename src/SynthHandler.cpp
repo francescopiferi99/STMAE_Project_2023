@@ -69,8 +69,8 @@ void SynthHandler::reset(int index) {
 }
 
 void SynthHandler::resetAll() {
-    for (int i = 0; i < 128; i++) {
-        oscillators[i]->resetOscillators();
+    for(auto & oscillator : oscillators) {
+        oscillator->resetOscillators();
     }
 }
 

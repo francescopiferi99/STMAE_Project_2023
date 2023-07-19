@@ -78,6 +78,7 @@ class MarkovManager {
 
       /** returns a copy of the model */
       MarkovChain getCopyOfModel();
+      void setMaxOrder(int newMaxOrder);
   private:
       void rememberChainEvent(state_and_observation event);
 

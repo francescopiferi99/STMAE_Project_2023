@@ -20,14 +20,17 @@ ExamPifAudioProcessorEditor::ExamPifAudioProcessorEditor (ExamPifAudioProcessor&
     addAndMakeVisible(numberOfNotes);
     numberOfNotes.addListener(this);
     numberOfNotes.setRange(1, 6, 1);
+    numberOfNotes.setValue(3);
 
     addAndMakeVisible(markovOrder);
     markovOrder.addListener(this);
     markovOrder.setRange(1, 6, 1);
+    markovOrder.setValue(1);
 
     addAndMakeVisible(velocity);
     velocity.addListener(this);
     velocity.setRange(1, 60, 1);
+    velocity.setValue(1);
 
     numberOfNotesLabel.setText("Number of Notes", juce::dontSendNotification);
     markovOrderLabel.setText("Markov Order", juce::dontSendNotification);
@@ -97,7 +100,11 @@ void ExamPifAudioProcessorEditor::sliderValueChanged(Slider *slider) {
 
 void ExamPifAudioProcessorEditor::buttonClicked(juce::Button *button) {
     if(button == &sendButton){
-        armonizer->setOrderValue(static_cast<int>(markovOrder.getValue()));
+        armonizer->setLengthOfList(static_cast<int>(numberOfNotes.getValue()));
+        armonizer->setMaxOrder(static_cast<int>(markovOrder.getValue()));
+        armonizer->createSequence();
+        // armonizer->createOscillators(2,3);
         // std::cout << armonizer->getOrder();
     }
+
 }

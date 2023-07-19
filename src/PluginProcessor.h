@@ -68,6 +68,7 @@ private:
 
     Armonizer* armonizer = Armonizer::getArmonizer(); // Singleton
     SynthHandler* synthHandler = SynthHandler::getSynthHandler();
+    std::vector<state_single> sequence; // = armonizer->createSequence();
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExamPifAudioProcessor)
 };

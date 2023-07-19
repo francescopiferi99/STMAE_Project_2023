@@ -15,7 +15,7 @@
 
 MarkovManager::MarkovManager(unsigned long chainEventMemoryLength) 
   : maxChainEventMemory{chainEventMemoryLength}, 
-  chainEventIndex{0}, 
+  chainEventIndex{0},
   locked{false}
 {
   inputMemory.assign(250, "0");
@@ -85,7 +85,6 @@ int MarkovManager::getOrderOfLastEvent()
 {
   return chain.getOrderOfLastMatch();
 }
-
 
 void MarkovManager::rememberChainEvent(state_and_observation sObs)
 {
@@ -162,4 +161,8 @@ bool MarkovManager::setupModelFromString(std::string modelData)
 MarkovChain MarkovManager::getCopyOfModel()
 {
   return chain;
+}
+
+void MarkovManager::setMaxOrder(int newMaxOrder){
+    chain.setMaxOrder(newMaxOrder);
 }
