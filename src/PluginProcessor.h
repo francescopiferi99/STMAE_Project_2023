@@ -65,10 +65,15 @@ private:
     double dphase;
     double frequency;
     double amp;
+    int currentNote;
+    int noteCurrentlyPlaying;
 
     Armonizer* armonizer = Armonizer::getArmonizer(); // Singleton
     SynthHandler* synthHandler = SynthHandler::getSynthHandler();
     std::vector<state_single> sequence; // = armonizer->createSequence();
-    //==============================================================================
+
+    state_single convert_midi_note_to_string(int midi_note);
+
+        //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExamPifAudioProcessor)
 };

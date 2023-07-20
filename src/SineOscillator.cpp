@@ -1,7 +1,3 @@
-//
-// Created by Francesco Piferi on 29/06/23.
-//
-
 #include "SineOscillator.h"
 #include <JuceHeader.h>
 
@@ -9,10 +5,6 @@ SineOscillator::SineOscillator() {
 }
 
 SineOscillator::SineOscillator(float gain_) {
-    gain = gain_;
-}
-
-void SineOscillator::setGain(float gain_){
     gain = gain_;
 }
 
@@ -36,3 +28,12 @@ forcedinline void SineOscillator::updateAngle() noexcept {
 float SineOscillator::getGain() {
     return gain;
 }
+
+void SineOscillator::setGain(float gain_) {
+    gain = gain_;
+}
+
+void SineOscillator::resetOscillator() {
+    currentAngle = 0.0f;
+}
+

@@ -33,7 +33,9 @@ class MarkovManager {
       * retrieve an event from the underlying markov model. 
       */
       state_single getEvent();
-      /**
+        state_single getEvent(state_sequence memory);
+
+    /**
        * returns the order of the model that generated the last event 
        * calls 
        */

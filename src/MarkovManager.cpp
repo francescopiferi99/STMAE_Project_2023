@@ -55,14 +55,14 @@ state_single MarkovManager::getEvent()
   mtx.lock();
 
   try{
-    // get an observation
-    event = chain.generateObservation(outputMemory, 100);
-    // check the output
-    // update the outputMemory
-    addStateToStateSequence(outputMemory, event);
-    // store the event in case we want to provide negative or positive feedback to the chain
-    // later
-    rememberChainEvent(chain.getLastMatch());
+      // get an observation
+      event = chain.generateObservation(outputMemory, 100);
+      // check the output
+      // update the outputMemory
+      addStateToStateSequence(outputMemory, event);
+      // store the event in case we want to provide negative or positive feedback to the chain
+      // later
+      rememberChainEvent(chain.getLastMatch());
   }catch(...){// put this here as my JUCE thing crashes due to lack of thread-safeness
     std::cout << "MarkovManager::getEvent crashed... catching" << std::endl;
     event = "0";
@@ -70,6 +70,29 @@ state_single MarkovManager::getEvent()
   mtx.unlock();
   return event;
 }
+
+state_single MarkovManager::getEvent(state_sequence memory)
+{
+    state_single event{""};
+    mtx.lock();
+
+    try{
+        // get an observation
+        event = chain.generateObservation(memory, 100);
+        // check the output
+        // update the outputMemory
+        addStateToStateSequence(memory, event);
+        // store the event in case we want to provide negative or positive feedback to the chain
+        // later
+        rememberChainEvent(chain.getLastMatch());
+    }catch(...){// put this here as my JUCE thing crashes due to lack of thread-safeness
+        std::cout << "MarkovManager::getEvent crashed... catching" << std::endl;
+        event = "0";
+    }
+    mtx.unlock();
+    return event;
+}
+
 
 void MarkovManager::addStateToStateSequence(state_sequence& seq, state_single new_state){
   // shift everything across

@@ -22,8 +22,9 @@ class Armonizer{
     void updateOscillators();
     bool isOn;
     float masterLevel = 0.0f;
-    double sampleRate;
+    double sampleRate = 44100;
     void exampleArmonizer();
+
 
 public:
     float getNextSample();
@@ -39,8 +40,8 @@ public:
     void setMasterLevel(double masterLevel_);
     void reset();
     void changeModel(const std::string& filename);
-    std::vector<state_single> createSequence();
+    std::vector<state_single> createSequence(state_single first);
     SineOscillator getOscillator(int index);
     void setMaxOrder(int newMaxOrder);
-
+    void reset(int midiNote);
     };

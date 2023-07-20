@@ -15,10 +15,14 @@ int main()
 
 
     std::cout << mm.getModelAsString();
-    mm.setMaxOrder(3);
-    for (auto i=0;i<50;++i){
-        state_single next = mm.getEvent();
-        int order = mm.getOrderOfLastEvent();
-        std::cout << "Next state " << next << " order " << order << std::endl;
+    mm.setMaxOrder(6);
+    state_sequence sequence;
+    sequence.emplace_back("A");
+    for (auto i=1;i<5;++i){
+        sequence.push_back(mm.getEvent(sequence));
+    }
+    for(auto i = 0; i < 5; i++){
+        std::cout << "Next state " << sequence[i] << std::endl;
+
     }
 }

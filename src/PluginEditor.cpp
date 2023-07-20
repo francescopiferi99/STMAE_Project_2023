@@ -102,7 +102,6 @@ void ExamPifAudioProcessorEditor::buttonClicked(juce::Button *button) {
     if(button == &sendButton){
         armonizer->setLengthOfList(static_cast<int>(numberOfNotes.getValue()));
         armonizer->setMaxOrder(static_cast<int>(markovOrder.getValue()));
-        armonizer->createSequence();
         // armonizer->createOscillators(2,3);
         // std::cout << armonizer->getOrder();
     }

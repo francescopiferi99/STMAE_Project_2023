@@ -19,6 +19,7 @@ public:
     void updateAngle() noexcept;
     float getGain();
     void setGain(float gain_);
+    void resetOscillator();
 
 private:
     float currentAngle = 0.0f, angleDelta = 0.0f;
