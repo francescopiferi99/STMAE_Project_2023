@@ -139,62 +139,39 @@ bool ExamPifAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 
 void ExamPifAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
-
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-    bool isOn = false;
-    juce::MidiBuffer processedMidi;
+
     armonizer->setSampleRate(getSampleRate());
 
+    juce::MidiBuffer processedMidi;
+
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear(i, 0, buffer.getNumSamples());
+        buffer.clear (i, 0, buffer.getNumSamples());
 
-    for (int channel = 0; channel < totalNumOutputChannels; ++channel){
-        if (channel == 0){
-            auto* channelDataL = buffer.getWritePointer (channel);
-            auto* channelDataR = buffer.getWritePointer (channel+1);
-            int numSamples = buffer.getNumSamples();
-
-            for (int sInd = 0; sInd < numSamples; ++sInd){
-                // std::cout << "Note On 2 !!!!!!!!!" << std::endl;
-                channelDataL[sInd] = (float) (std::sin(phase) * amp);
-                channelDataR[sInd] = (float) (std::sin(phase) * amp);
-                phase += dphase;
-                if (amp > 0 && !isOn)
-                    amp *= 0.9999;  // Reduce the amplitude gradually for fade-out effect
-            }
-        }
-    }
-
-    for (const auto metadata : midiMessages){
+    for (const auto metadata : midiMessages) {
         auto message = metadata.getMessage();
         const auto time = metadata.samplePosition;
-        DBG("processBlock:: Got message " << message.getNoteNumber());
 
-        if (message.isNoteOn()){
-            // std::cout << "Note On 1 !!!!!!!!!!!!!!!" << std::endl;
+        if (message.isNoteOn())
+        {
+            armonizer->initialize();
             armonizer->setIsOn(true);
             int midiNote = message.getNoteNumber();
-            double fundFreq = message.getMidiNoteInHertz(midiNote);
+            double fundFreq = message.getMidiNoteInHertz(message.getNoteNumber());
             armonizer->createOscillators(midiNote, fundFreq);
-            isOn = true;
-            amp = 1;
-            frequency = juce::MidiMessage::getMidiNoteInHertz(message.getNoteNumber());
-            dphase = this->getDPhase(frequency, getSampleRate());
-
-            break;
         }
-        if (message.isNoteOff()){
-            int midiNote = message.getNoteNumber();
+        else if (message.isNoteOff()) {
             armonizer->setIsOn(false);
+            int midiNote = message.getNoteNumber();
+            armonizer->reset();
         }
+
         processedMidi.addEvent(message, time);
     }
-
     midiMessages.swapWith(processedMidi);
     armonizer->getNextAudioBlock(buffer);
-
 }
 
 //==============================================================================

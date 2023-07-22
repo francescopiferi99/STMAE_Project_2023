@@ -36,4 +36,3 @@ void SineOscillator::setGain(float gain_) {
 void SineOscillator::resetOscillator() {
     currentAngle = 0.0f;
 }
-

@@ -21,7 +21,11 @@ public:
     void setGain(float gain_);
     void resetOscillator();
 
+
 private:
     float currentAngle = 0.0f, angleDelta = 0.0f;
     float gain = 0.0f;
+    float phase = 0;
+    float dphase = 0;
+    float amp = 1;
 };

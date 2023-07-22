@@ -7,9 +7,12 @@
 
 #endif //PIFERI_EXAM_01_ARMONIZER_H
 
-#include "SynthHandler.h"
 #include "MarkovManager.h"
+// #include "SynthHandler.h"
+#include "SineOscillator.h"
+#include <JuceHeader.h>
 #include <vector>
+
 
 class Armonizer{
     static Armonizer* armonizer;
@@ -21,7 +24,7 @@ class Armonizer{
     MarkovManager mm;
     void updateOscillators();
     bool isOn;
-    float masterLevel = 0.0f;
+    float masterLevel = 10.0f;
     double sampleRate = 44100;
     void exampleArmonizer();
 
@@ -43,5 +46,5 @@ public:
     std::vector<state_single> createSequence(state_single first);
     SineOscillator getOscillator(int index);
     void setMaxOrder(int newMaxOrder);
-    void reset(int midiNote);
+    void initialize();
     };

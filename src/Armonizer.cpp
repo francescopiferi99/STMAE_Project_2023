@@ -69,34 +69,21 @@ std::vector<state_single> Armonizer::createSequence(state_single first){
     return sequence;
 }
 
-void Armonizer::getNextAudioBlock(juce::AudioBuffer<float> &bufferToFill) {
-    std::cout << "UNO: " << armonizer->oscillators[0].getGain() << std::endl;
-    std::cout << "DUE: " << armonizer->oscillators[1].getGain() << std::endl;
-
-    // Make sure that the harmonizer is turned on
+void Armonizer::getNextAudioBlock(juce::AudioBuffer<float>& bufferToFill) {
     if (isOn) {
-
         auto* leftBuffer = bufferToFill.getWritePointer(0);
         auto* rightBuffer = bufferToFill.getWritePointer(1);
-        // Set the gain to a value greater than 0
-        float gain = 10.0f;
-
-        // Initialize the levelSample variable to 0
+        float gain;
         float levelSample = 0;
-
-        // Iterate over the buffer
         for (auto sample = 0; sample < bufferToFill.getNumSamples(); ++sample)
         {
-            // Reset the levelSample variable
             levelSample = 0;
-
-            // Generate sound from the oscillators
-            for (auto & oscillator : oscillators) {
-                levelSample += oscillator.getNextSample() * gain;
-                // Add the levelSample variable to the buffer
-                leftBuffer[sample] += levelSample;
-                rightBuffer[sample] += levelSample;
+            gain = masterLevel;
+            for (int i = 0; i < length; i++) {
+                levelSample += oscillators[i].getNextSample();
             }
+            leftBuffer[sample] += levelSample;
+            rightBuffer[sample] += levelSample;
         }
     }
     else updateOscillators();
@@ -118,11 +105,11 @@ void Armonizer::setSampleRate(double sampleRate_){
 
 void Armonizer::createOscillators(int index, double freq) {
     jassert(index >= 0 && index <= 128);
-    oscillators.clear();
     double gain = 1.0;
+    updateOscillators();
     for(int i = 0; i < length; i++){
         oscillators[i].setGain(gain*30);
-        oscillators[i].setFrequency(freq, sampleRate);
+        oscillators[i].setFrequency(freq + i, sampleRate);
     }
 }
 
@@ -151,7 +138,7 @@ void Armonizer::exampleArmonizer(){
     mm.putEvent("A");
 }
 
-void Armonizer::reset(int index) {
-    jassert(index >= 0 && index <= 127);
-    oscillators[index].resetOscillator();
+
+void Armonizer::initialize(){
+    armonizer->updateOscillators();
 }

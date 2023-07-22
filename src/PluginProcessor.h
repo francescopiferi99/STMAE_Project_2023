@@ -9,7 +9,6 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "SynthHandler.h"
 #include "Armonizer.h"
 //==============================================================================
 /**
@@ -69,7 +68,6 @@ private:
     int noteCurrentlyPlaying;
 
     Armonizer* armonizer = Armonizer::getArmonizer(); // Singleton
-    SynthHandler* synthHandler = SynthHandler::getSynthHandler();
     std::vector<state_single> sequence; // = armonizer->createSequence();
 
     state_single convert_midi_note_to_string(int midi_note);
