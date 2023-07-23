@@ -156,11 +156,20 @@ void ExamPifAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
 
         if (message.isNoteOn())
         {
-            armonizer->initialize();
-            armonizer->setIsOn(true);
-            int midiNote = message.getNoteNumber();
-            double fundFreq = message.getMidiNoteInHertz(message.getNoteNumber());
-            armonizer->createOscillators(midiNote, fundFreq);
+            if(!armonizer->creation){
+                // Play the SineOscillator
+                armonizer->initialize();
+                armonizer->setIsOn(true);
+                int midiNote = message.getNoteNumber();
+                double fundFreq = message.getMidiNoteInHertz(message.getNoteNumber());
+                armonizer->createOscillators(midiNote, fundFreq);
+            }
+            else{
+                // Send the midiNoteNumber to a function inside Armonizer in order to create the new sequence
+                armonizer->addSequence(message.getNoteNumber());
+                std::cout << message.getNoteNumber() << std::endl;
+            }
+
         }
         else if (message.isNoteOff()) {
             armonizer->setIsOn(false);

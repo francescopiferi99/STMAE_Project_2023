@@ -47,6 +47,14 @@ ExamPifAudioProcessorEditor::ExamPifAudioProcessorEditor (ExamPifAudioProcessor&
     addAndMakeVisible(sendButton);
     sendButton.addListener(this);
     sendButton.setButtonText("Update Values");
+
+    addAndMakeVisible(createButton);
+    createButton.addListener(this);
+    createButton.setButtonText("New Pattern");
+
+    addAndMakeVisible(saveButton);
+    saveButton.addListener(this);
+    saveButton.setButtonText("Save");
 }
 
 ExamPifAudioProcessorEditor::~ExamPifAudioProcessorEditor()
@@ -92,6 +100,13 @@ void ExamPifAudioProcessorEditor::resized()
     velocityLabel.setBounds(0, 2 * sliderHeight, labelWidth, sliderHeight);
 
     sendButton.setBounds(getWidth() - buttonWidth - buttonMargin, getHeight() - buttonHeight - buttonMargin, buttonWidth, buttonHeight);
+
+    createButton.setBounds(buttonMargin, getHeight() - 2 * buttonHeight - 2 * buttonMargin, buttonWidth, buttonHeight);
+
+    // Create the saveButton
+    saveButton.setBounds(buttonMargin, getHeight() - buttonHeight - buttonMargin, buttonWidth, buttonHeight);
+
+
 }
 
 void ExamPifAudioProcessorEditor::sliderValueChanged(Slider *slider) {
@@ -105,5 +120,10 @@ void ExamPifAudioProcessorEditor::buttonClicked(juce::Button *button) {
         // armonizer->createOscillators(2,3);
         // std::cout << armonizer->getOrder();
     }
-
+    if(button == &createButton){
+        armonizer->newSequence();
+    }
+    if(button == &saveButton){
+        armonizer->saveSequence();
+    }
 }

@@ -27,9 +27,12 @@ class Armonizer{
     float masterLevel = 10.0f;
     double sampleRate = 44100;
     void exampleArmonizer();
+    state_single fromNoteNumberToName(int noteNumber);
+    double fromNameToFirstFrequecy(state_single);
 
 
 public:
+    bool creation = false;
     float getNextSample();
     void setSampleRate(double sampleRate_);
     void setLengthOfList(int newValue);
@@ -47,4 +50,7 @@ public:
     SineOscillator getOscillator(int index);
     void setMaxOrder(int newMaxOrder);
     void initialize();
+    void newSequence();
+    void saveSequence();
+    void addSequence(int noteNumber);
     };

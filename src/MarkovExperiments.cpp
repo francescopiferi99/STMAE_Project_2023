@@ -18,11 +18,12 @@ int main()
     mm.setMaxOrder(6);
     state_sequence sequence;
     sequence.emplace_back("A");
-    for (auto i=1;i<5;++i){
+    sequence.emplace_back("B");
+    sequence.emplace_back("H");
+    sequence.emplace_back("H");
+    for (auto i=0;i<50;++i){
         sequence.push_back(mm.getEvent(sequence));
-    }
-    for(auto i = 0; i < 5; i++){
         std::cout << "Next state " << sequence[i] << std::endl;
-
     }
+
 }

@@ -41,6 +41,9 @@ private:
 
     juce::TextButton sendButton;
 
+    juce::TextButton createButton;
+    juce::TextButton saveButton;
+
     Armonizer* armonizer = Armonizer::getArmonizer();
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExamPifAudioProcessorEditor)
 };
