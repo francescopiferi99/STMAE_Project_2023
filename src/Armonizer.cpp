@@ -77,13 +77,19 @@ void Armonizer::getNextAudioBlock(juce::AudioBuffer<float>& bufferToFill) {
         float levelSample = 0;
         for (auto sample = 0; sample < bufferToFill.getNumSamples(); ++sample)
         {
+            if (timeElapsed >= oscillatorDuration) {
+                // Move to the next oscillator
+                currentOscillatorIndex = (currentOscillatorIndex + 1) % length;
+                timeElapsed = 0.0;
+            }
+
             levelSample = 0;
             gain = masterLevel;
-            for (int i = 0; i < length; i++) {
-                levelSample += oscillators[i].getNextSample();
-            }
+            levelSample += oscillators[currentOscillatorIndex].getNextSample();
             leftBuffer[sample] += levelSample;
             rightBuffer[sample] += levelSample;
+
+            timeElapsed += 1.0 / sampleRate;
         }
     }
     else updateOscillators();
@@ -101,6 +107,10 @@ void Armonizer::setMasterLevel(double masterLevel_)
 
 void Armonizer::setSampleRate(double sampleRate_){
     sampleRate = sampleRate_;
+}
+
+void Armonizer::setOscillatorDuration(double durationInSeconds) {
+    oscillatorDuration = durationInSeconds;
 }
 
 void Armonizer::createOscillators(int index, double freq) {
@@ -141,16 +151,102 @@ SineOscillator Armonizer::getOscillator(int index){
 
 void Armonizer::exampleArmonizer(){
     mm.reset();
+    mm.putEvent("F");
+    mm.putEvent("E");
     mm.putEvent("A");
-    mm.putEvent("B");
+    mm.putEvent("D");
+    mm.putEvent("D");
+    mm.putEvent("A#");
     mm.putEvent("C");
-    mm.putEvent("A");
-    mm.putEvent("B");
+    mm.putEvent("F");
+    mm.putEvent("C");
+    mm.putEvent("D");
+    mm.putEvent("G");
+    mm.putEvent("A#");
+    mm.putEvent("F");
+    mm.putEvent("F");
     mm.putEvent("E");
+    mm.putEvent("A");
+    mm.putEvent("D");
+    mm.putEvent("D");
+    mm.putEvent("A#");
+    mm.putEvent("C");
+    mm.putEvent("F");
+    mm.putEvent("C");
+    mm.putEvent("D");
+    mm.putEvent("G");
+    mm.putEvent("A#");
+    mm.putEvent("F");
+    mm.putEvent("A");
+    mm.putEvent("A");
+    mm.putEvent("D");
+    mm.putEvent("C");
+    mm.putEvent("A#");
+    mm.putEvent("D");
+    mm.putEvent("G");
+    mm.putEvent("C");
+    mm.putEvent("F");
+    mm.putEvent("A");
+    mm.putEvent("A");
+    mm.putEvent("D");
+    mm.putEvent("C");
+    mm.putEvent("A#");
+    mm.putEvent("D");
+    mm.putEvent("G");
+    mm.putEvent("C");
+    mm.putEvent("F");
+    mm.putEvent("F");
+    mm.putEvent("F");
     mm.putEvent("E");
     mm.putEvent("A");
-}
+    mm.putEvent("D");
+    mm.putEvent("D");
+    mm.putEvent("A#");
+    mm.putEvent("C");
+    mm.putEvent("F");
+    mm.putEvent("C");
+    mm.putEvent("D");
+    mm.putEvent("G");
+    mm.putEvent("A#");
+    mm.putEvent("F");
+    mm.putEvent("A");
+    mm.putEvent("A");
+    mm.putEvent("D");
+    mm.putEvent("C");
+    mm.putEvent("A#");
+    mm.putEvent("D");
+    mm.putEvent("G");
+    mm.putEvent("C");
+    mm.putEvent("F");
+    mm.putEvent("A");
+    mm.putEvent("A");
+    mm.putEvent("D");
+    mm.putEvent("C");
+    mm.putEvent("A#");
+    mm.putEvent("D");
+    mm.putEvent("G");
+    mm.putEvent("C");
+    mm.putEvent("F");
+    mm.putEvent("F");
+    mm.putEvent("F");
+    mm.putEvent("E");
+    mm.putEvent("A");
+    mm.putEvent("D");
+    mm.putEvent("D");
+    mm.putEvent("A#");
+    mm.putEvent("C");
+    mm.putEvent("F");
+    mm.putEvent("C");
+    mm.putEvent("D");
+    mm.putEvent("G");
+    mm.putEvent("A#");
+    mm.putEvent("F");
+    mm.putEvent("G");
+    mm.putEvent("A#");
+    mm.putEvent("F");
 
+
+}
 
 void Armonizer::initialize(){
     updateOscillators();
@@ -229,3 +325,10 @@ double Armonizer::fromNameToFirstFrequecy(state_single note){
     else if (note == "G#") return 830.609/4;
     else return 0.0;
 }
+
+void Armonizer::resetArmonizer(){
+    armonizer->setLengthOfList(3);
+    armonizer->setMaxOrder(1);
+    armonizer->exampleArmonizer();
+}
+

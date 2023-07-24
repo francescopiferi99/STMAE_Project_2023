@@ -29,6 +29,9 @@ class Armonizer{
     void exampleArmonizer();
     state_single fromNoteNumberToName(int noteNumber);
     double fromNameToFirstFrequecy(state_single);
+    int currentOscillatorIndex = 0;
+    double oscillatorDuration = 0.2; // 0.2 seconds for each oscillator
+    double timeElapsed = 0.0;
 
 
 public:
@@ -53,4 +56,6 @@ public:
     void newSequence();
     void saveSequence();
     void addSequence(int noteNumber);
+    void setOscillatorDuration(double durationInSeconds);
+    void resetArmonizer();
     };

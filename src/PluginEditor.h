@@ -33,7 +33,7 @@ private:
 
     juce::Slider numberOfNotes;
     juce::Slider markovOrder;
-    juce::Slider velocity;
+    juce::Slider duration;
 
     juce::Label numberOfNotesLabel;
     juce::Label markovOrderLabel;
@@ -43,6 +43,9 @@ private:
 
     juce::TextButton createButton;
     juce::TextButton saveButton;
+
+    juce::TextButton reset;
+    juce::TextButton saveLastSequence;
 
     Armonizer* armonizer = Armonizer::getArmonizer();
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (ExamPifAudioProcessorEditor)
