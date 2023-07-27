@@ -4,6 +4,7 @@
 
 #include "Armonizer.h"
 #include "MarkovManager.h"
+#include "fstream"
 
 #pragma once
 
@@ -53,15 +54,13 @@ void Armonizer::updateOscillators()
     // Clear existing oscillators
     oscillators.clear();
 
-    for (int i = 0; i < length; ++i)
-    {
+    for (int i = 0; i < length; ++i){
         SineOscillator sineOscillator;
         oscillators.push_back(sineOscillator);
     }
 }
 
 std::vector<state_single> Armonizer::createSequence(state_single first){
-    std::vector<state_single> sequence;
     sequence.emplace_back(first);
     for(int i = 1; i < length; i++){
         sequence.push_back(mm.getEvent(sequence));
@@ -119,13 +118,17 @@ void Armonizer::createOscillators(int index, double freq) {
     updateOscillators();
     int noteNumber = (int)round(69 + 12 * log2(freq / 440.0));
     state_single note = fromNoteNumberToName(noteNumber);
-    std::cout << note << " This is the first " << std::endl;
-    state_sequence sequence = createSequence(note);
-
+    // std::cout << note << " This is the first " << std::endl;
+    sequence.clear();
+    sequence = createSequence(note);
+    database.insert(database.begin(), sequence);
+    while (database.size() > 10) {
+        database.pop_back(); // Remove the last item (the oldest one)
+    }
     for(int i = 0; i < length; i++){
         oscillators[i].setGain(gain*30);
         double frequence = fromNameToFirstFrequecy(sequence[i]);
-        std::cout << "i: " << i << " Note: " << sequence[i] << " freq: " << frequence << std::endl;
+        // std::cout << "i: " << i << " Note: " << sequence[i] << " freq: " << frequence << std::endl;
         bool end = true;
         // while to take rebase the octave
         while(end){
@@ -244,8 +247,6 @@ void Armonizer::exampleArmonizer(){
     mm.putEvent("G");
     mm.putEvent("A#");
     mm.putEvent("F");
-
-
 }
 
 void Armonizer::initialize(){
@@ -332,3 +333,85 @@ void Armonizer::resetArmonizer(){
     armonizer->exampleArmonizer();
 }
 
+state_sequence Armonizer::getSequence() {
+    return sequence;
+}
+
+void Armonizer::printSequence(){
+    for(int i = 0; i < length; i++){
+        std::cout << sequence[i] << std::endl;
+    }
+}
+
+std::vector<state_sequence> Armonizer::getDatabase() {
+    return database;
+}
+
+void Armonizer::writeToExternalFile(const std::string& filename, int index){
+
+    std::ofstream outputFile(filename, std::ios::out);
+    if (outputFile.is_open())
+    {
+            for(int j = 0; j < database[index].size(); j++) {
+                if(j == database[index].size()-1){
+                    outputFile << database[index][j] << " ";
+                }
+                else outputFile << database[index][j] << ", ";
+            }
+        outputFile.close();
+        std::cout << "Data has been written to the file: " << filename << std::endl;
+    }
+    else
+    {
+        std::cout << "Failed to open the file: " << filename << std::endl;
+    }
+}
+
+void Armonizer::writeMidiFile(const std::string& filename, const std::vector<int>& notes) {
+    std::ofstream outputFile(filename, std::ios::binary);
+    if (!outputFile.is_open()) {
+        std::cout << "Failed to open the file for writing." << std::endl;
+        return;
+    }
+
+    // MIDI Header chunk
+    unsigned char headerChunk[] = {
+            'M', 'T', 'h', 'd', // Chunk ID
+            0x00, 0x00, 0x00, 0x06, // Chunk size
+            0x00, 0x00, // Format type (type 0)
+            0x00, 0x01, // Number of tracks
+            0x00, 0x60, // Division (ppqn, or pulses per quarter note)
+    };
+    outputFile.write(reinterpret_cast<char*>(headerChunk), sizeof(headerChunk));
+
+    // MIDI Track chunk
+    unsigned char trackChunk[] = {
+            'M', 'T', 'r', 'k', // Chunk ID
+            0x00, 0x00, 0x00, 0x00, // Chunk size (will be filled later)
+    };
+    outputFile.write(reinterpret_cast<char*>(trackChunk), sizeof(trackChunk));
+
+    // Add MIDI events for each note
+    for (int note : notes) {
+        unsigned char noteOnEvent[] = {
+                0x00, 0x90, // Delta time and MIDI event type (note on)
+                static_cast<unsigned char>(note), 0x40 // Note and velocity
+        };
+        unsigned char noteOffEvent[] = {
+                0x60, 0x80, // Delta time and MIDI event type (note off)
+                static_cast<unsigned char>(note), 0x40 // Note and velocity
+        };
+        outputFile.write(reinterpret_cast<char*>(noteOnEvent), sizeof(noteOnEvent));
+        outputFile.write(reinterpret_cast<char*>(noteOffEvent), sizeof(noteOffEvent));
+    }
+
+    // Calculate and fill the track chunk size
+    int trackChunkSize = static_cast<int>(outputFile.tellp()) - sizeof(trackChunk) - 4;
+    outputFile.seekp(sizeof(headerChunk) + 4);
+    outputFile.put(static_cast<unsigned char>((trackChunkSize >> 24) & 0xFF));
+    outputFile.put(static_cast<unsigned char>((trackChunkSize >> 16) & 0xFF));
+    outputFile.put(static_cast<unsigned char>((trackChunkSize >> 8) & 0xFF));
+    outputFile.put(static_cast<unsigned char>(trackChunkSize & 0xFF));
+
+    outputFile.close();
+}

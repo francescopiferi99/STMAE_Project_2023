@@ -8,7 +8,6 @@
 #endif //PIFERI_EXAM_01_ARMONIZER_H
 
 #include "MarkovManager.h"
-// #include "SynthHandler.h"
 #include "SineOscillator.h"
 #include <JuceHeader.h>
 #include <vector>
@@ -32,10 +31,13 @@ class Armonizer{
     int currentOscillatorIndex = 0;
     double oscillatorDuration = 0.2; // 0.2 seconds for each oscillator
     double timeElapsed = 0.0;
-
+    state_sequence sequence;
+    std::vector<state_sequence> database;
+    std::vector<int> fromNameToNumber(state_sequence sequence);
 
 public:
     bool creation = false;
+    std::vector<state_sequence> getDatabase();
     float getNextSample();
     void setSampleRate(double sampleRate_);
     void setLengthOfList(int newValue);
@@ -58,4 +60,8 @@ public:
     void addSequence(int noteNumber);
     void setOscillatorDuration(double durationInSeconds);
     void resetArmonizer();
-    };
+    void printSequence();
+    state_sequence getSequence();
+    void writeToExternalFile(const std::string& filename, int index);
+    void writeMidiFile(const std::string& filename, const std::vector<int>& notes);
+};
