@@ -34,7 +34,9 @@ private:
     // access the processor object that created it.
     ExamPifAudioProcessor& audioProcessor;
 
-    std::string page = "main";
+    bool comboPopUpOpen = false;
+
+    void updateComboBoxItems();
 
     juce::Slider numberOfNotes;
     juce::Slider markovOrder;

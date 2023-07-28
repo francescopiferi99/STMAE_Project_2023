@@ -67,18 +67,17 @@ ExamPifAudioProcessorEditor::ExamPifAudioProcessorEditor (ExamPifAudioProcessor&
     saveLastSequence.setButtonText("Save Sequence");
 
     addAndMakeVisible(saveSequences);
-    saveSequences.setText("Save Sequence", dontSendNotification);
-    saveSequences.addItem("Save a melody", 1);
-    saveSequences.addItem("UNO", 2);
-    saveSequences.addItem("DUE", 3);
-    saveSequences.addItem("TRE", 4);
-    saveSequences.addItem("QUATTRO", 5);
-    saveSequences.addItem("CINQUE", 6);
-    saveSequences.addItem("SEI", 7);
-    saveSequences.addItem("SETTE", 8);
-    saveSequences.addItem("OTTO", 9);
-    saveSequences.addItem("NOVE", 10);
-    saveSequences.addItem("DIECI", 11);
+    saveSequences.addItem("Save Your Melody", 1);
+    saveSequences.addItem("Save Last Melody", 2);
+    saveSequences.addItem("Save Penultimate Melody", 3);
+    saveSequences.addItem("Save 3th Melody", 4);
+    saveSequences.addItem("Save 4th Melody", 5);
+    saveSequences.addItem("Save 5th Melody", 6);
+    saveSequences.addItem("Save 6th Melody", 7);
+    saveSequences.addItem("Save 7th Melody", 8);
+    saveSequences.addItem("Save 8th Melody", 9);
+    saveSequences.addItem("Save 9th Melody", 10);
+    saveSequences.addItem("Save 10th Melody", 11);
     saveSequences.setSelectedId(1);
     saveSequences.onChange = [this] { comboChanged(&saveSequences); };
 
@@ -174,8 +173,7 @@ void ExamPifAudioProcessorEditor::buttonClicked(juce::Button *button) {
 
 void ExamPifAudioProcessorEditor::comboChanged(juce::ComboBox * combo){
     std::vector<state_sequence> db = armonizer->getDatabase();
-    if(combo == &saveSequences && saveSequences.getSelectedId() < armonizer->getSequence().size() && saveSequences.getSelectedId() != 1){
-        std::cout << saveSequences.getSelectedId();
+    if(combo == &saveSequences && saveSequences.getSelectedId() < armonizer->getDatabase().size() + 2 && saveSequences.getSelectedId() != 1){
         state_sequence notes = db[saveSequences.getSelectedId()-2];
         std::vector<int> numbers = convert(notes);
         armonizer->writeMidiFile("/Users/francescopiferi/CLionProjects/STMAE_Project_2023/src/output.mid", numbers);
@@ -183,10 +181,10 @@ void ExamPifAudioProcessorEditor::comboChanged(juce::ComboBox * combo){
     }
 }
 
-std::vector<int> ExamPifAudioProcessorEditor::convert(state_sequence notes){
+std::vector<int> ExamPifAudioProcessorEditor::convert(state_sequence notes) {
     std::vector<int> numbers;
     numbers.clear();
-    for(int i = 0; i < notes.size(); i++){
+    for (int i = 0; i < notes.size(); i++) {
         if (notes[i] == "C") numbers.push_back(60);
         else if (notes[i] == "C#") numbers.push_back(61);
         else if (notes[i] == "D") numbers.push_back(62);
@@ -199,6 +197,12 @@ std::vector<int> ExamPifAudioProcessorEditor::convert(state_sequence notes){
         else if (notes[i] == "A") numbers.push_back(69);
         else if (notes[i] == "A#") numbers.push_back(70);
         else if (notes[i] == "B") numbers.push_back(71);
+        else {
+            // Handle the case when an unrecognized note is encountered
+            // Print an error message and stop adding notes to the numbers vector.
+            std::cerr << "Error: Unrecognized note: " << notes[i] << std::endl;
+            break;
+        }
     }
     return numbers;
 }
