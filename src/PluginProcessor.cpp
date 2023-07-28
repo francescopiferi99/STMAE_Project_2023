@@ -168,6 +168,8 @@ void ExamPifAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce
                 // Send the midiNoteNumber to a function inside Armonizer in order to create the new sequence
                 armonizer->addSequence(message.getNoteNumber());
                 std::cout << message.getNoteNumber() << std::endl;
+                armonizer->setIsOn(true);
+                armonizer->createOscillators(message.getMidiNoteInHertz(message.getNoteNumber()));
             }
 
         }

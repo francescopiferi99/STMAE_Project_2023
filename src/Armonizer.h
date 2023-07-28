@@ -46,6 +46,8 @@ public:
     int getVelocity();
     static Armonizer* getArmonizer();
     void createOscillators(int index, double freq);
+    void createOscillators(double freq);
+
     void getNextAudioBlock(juce::AudioBuffer<float>& bufferToFill);
     void setIsOn(bool isOn_);
     void setMasterLevel(double masterLevel_);

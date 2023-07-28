@@ -152,6 +152,9 @@ void ExamPifAudioProcessorEditor::buttonClicked(juce::Button *button) {
     }
     if(button == &saveButton){
         armonizer->saveSequence();
+        armonizer->setLengthOfList(static_cast<int>(numberOfNotes.getValue()));
+        armonizer->setMaxOrder(static_cast<int>(markovOrder.getValue()));
+        armonizer->setOscillatorDuration(duration.getValue());
     }
     if(button == &reset){
         armonizer->resetArmonizer();

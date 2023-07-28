@@ -415,3 +415,29 @@ void Armonizer::writeMidiFile(const std::string& filename, const std::vector<int
 
     outputFile.close();
 }
+
+
+void Armonizer::createOscillators(double freq) {
+    double gain = 1.0;
+    updateOscillators();
+    std::cout << freq << std::endl;
+    int noteNumber = (int)round(69 + 12 * log2(freq / 440.0));
+    state_single note = fromNoteNumberToName(noteNumber);
+    oscillatorDuration = 3;
+    // std::cout << note << " This is the first " << std::endl;
+    for(int i = 0; i < length; i++){
+        sequence.clear();
+        sequence.push_back(note);
+        if(i == 0) oscillators[i].setGain(gain*30);
+        else oscillators[i].setGain(0);
+        double frequence = fromNameToFirstFrequecy(sequence[0]);
+        // std::cout << "i: " << i << " Note: " << sequence[i] << " freq: " << frequence << std::endl;
+        bool end = true;
+        // while to take rebase the octave
+        while(end){
+            if(frequence < freq) frequence *= 2;
+            else end = false;
+        }
+        oscillators[i].setFrequency(frequence, sampleRate);
+    }
+}
