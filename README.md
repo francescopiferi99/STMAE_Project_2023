@@ -39,6 +39,7 @@ The generated note sequence can be exported as a MIDI file by selecting the desi
 
 ## Author
 * Piferi Francesco - francesco.piferi@mail.polimi.it
-<p align="center">
-  <i>For more details about this project and for a complete User Evaluation of it, please refer to the complete [**report**](./resources/STMAE_Piferi_Report.pdf)</i>
-</p>
+
+<i>For more details about this project and for a complete User Evaluation of it, please refer to the complete [**report**](./resources/STMAE_Piferi_Report.pdf)</i>
+
+
