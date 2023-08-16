@@ -23,6 +23,8 @@ The dataset of this project is a long sequence of notes. From that sequence it i
 
 The built-in dataset is _The Music Of The Night_, a song by Andrew Lloyd Webber from the musical _The Phantom Of The Opera_, but the user can decide to play a new song and use it to extract the Model.
 
+Upon user activation of the built-in SineOscillator, the melody creation process is initiated, commencing from the pressed note. The subsequent note is then determined based on the sequential pattern derived from the model. Notably, the model is designed to optimize the Markov Order, striving to enhance the melodic coherence and musical structure of the generated sequence.
+
 
 ## MIDI Extraction
 The generated note sequence can be exported as a MIDI file by selecting the desired sequence from the ComboBox. Upon selection, the sequence will be automatically saved as an `output.mid` file. This facilitates seamless integration with various external Digital Audio Workstations such as GarageBand, LogicProX, Ableton, and numerous others.
@@ -37,9 +39,11 @@ The generated note sequence can be exported as a MIDI file by selecting the desi
     ├── PluginProcessor .h/.cpp
     ├── SineOscillator .h/.cpp
     └── resources
-        └── ...
+        └── images and report
 
-
+## Author
+* Piferi Francesco - francesco.piferi@mail.polimi.it
+  
 <p align="center">
   <i>For more details about this project and for a complete User Evaluation of it, please refer to the complete report</i>
 </p>
