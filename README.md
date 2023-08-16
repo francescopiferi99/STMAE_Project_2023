@@ -9,10 +9,6 @@ Automated music pattern generation is a burgeoning area of research that combine
   <img src="./resources/GUI.png" width="50%"/>
 </p>
 
-## Tools
-- Juce
-
-
 ## Markov Models - Definition
 Markov Models were initially theorised by the Russian mathematician Andrey Markov (14 June 1856 – 20 July 1922). They are stochastic processes that undergo transitions from one state to another. Over the years, they have found countless applications, especially for modelling processes and informing decision making, in the fields of physics, queuing theory, statistics and music.
 
