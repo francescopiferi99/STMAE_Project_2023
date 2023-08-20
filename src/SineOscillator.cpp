@@ -1,6 +1,9 @@
 #include "SineOscillator.h"
 #include <JuceHeader.h>
 
+/**
+ * SineOscillator is a single sine wave that is played in the Armonizer
+ */
 SineOscillator::SineOscillator() {
 }
 

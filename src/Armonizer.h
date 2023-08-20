@@ -17,26 +17,26 @@ class Armonizer{
     static Armonizer* armonizer;
     std::vector<SineOscillator> oscillators;
     Armonizer();
-    int length;
-    int order;
-    int velocity;
-    MarkovManager mm;
+    int length; // Number of notes in an Armonizer
+    int order; // Markon order
+    int velocity; // Duration of the notes
+    MarkovManager mm; // Markov Chain
     void updateOscillators();
-    bool isOn;
-    float masterLevel = 10.0f;
-    double sampleRate = 44100;
+    bool isOn; // Bool to control the playback session
+    float masterLevel = 1.0f; // Master volume
+    double sampleRate = 44100; // Sample rate, by default 44100
     void exampleArmonizer();
     state_single fromNoteNumberToName(int noteNumber);
     double fromNameToFirstFrequecy(state_single);
-    int currentOscillatorIndex = 0;
-    double oscillatorDuration = 0.2; // 0.2 seconds for each oscillator
-    double timeElapsed = 0.0;
-    state_sequence sequence;
-    std::vector<state_sequence> database;
+    int currentOscillatorIndex = 0; // Index for the playback session
+    double oscillatorDuration = 0.2; // Duration of each note
+    double timeElapsed = 0.0; // Times between the beginning of the the notes and the current time
+    state_sequence sequence; // Sequence of notes
+    std::vector<state_sequence> database; // Last 10 sequences created
     std::vector<int> fromNameToNumber(state_sequence sequence);
 
 public:
-    bool creation = false;
+    bool creation = false; // Bool to control the creation session
     std::vector<state_sequence> getDatabase();
     float getNextSample();
     void setSampleRate(double sampleRate_);

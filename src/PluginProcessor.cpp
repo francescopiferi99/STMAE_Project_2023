@@ -137,6 +137,9 @@ bool ExamPifAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) 
 }
 #endif
 
+/**
+ * Function that manages the sound of the plugin
+ */
 void ExamPifAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;

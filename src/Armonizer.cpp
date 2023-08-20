@@ -8,6 +8,13 @@
 
 #pragma once
 
+/**
+ * Armonizer is the container of the notes that will be played during the playback session
+ */
+
+/**
+ * Initialization of the singleton
+ */
 Armonizer* Armonizer::armonizer = NULL;
 
 Armonizer::Armonizer() {
@@ -17,14 +24,17 @@ Armonizer::Armonizer() {
 Armonizer* Armonizer::getArmonizer(){
     if (armonizer == NULL) {
         armonizer = new Armonizer();
-        armonizer->setLengthOfList(3);
-        armonizer->setMaxOrder(1);
+        armonizer->setLengthOfList(30);
+        armonizer->setMaxOrder(2);
         armonizer->exampleArmonizer();
         // armonizer->createSequence("A");
     }
     return armonizer;
 }
 
+/**
+ * Setters and Getters
+ */
 void Armonizer::setLengthOfList(int newValue)
 {
     length = newValue;
@@ -48,7 +58,9 @@ int Armonizer::getVelocity() {
     return velocity;
 }
 
-
+/**
+ * This function initializes the oscillators
+ */
 void Armonizer::updateOscillators()
 {
     // Clear existing oscillators
@@ -60,6 +72,11 @@ void Armonizer::updateOscillators()
     }
 }
 
+/**
+ * Function that creates the sequence of notes from the Markov Chain
+ * @param first is the key pressed by the user
+ * @return the sequence created
+ */
 std::vector<state_single> Armonizer::createSequence(state_single first){
     sequence.emplace_back(first);
     for(int i = 1; i < length; i++){
@@ -68,6 +85,10 @@ std::vector<state_single> Armonizer::createSequence(state_single first){
     return sequence;
 }
 
+/**
+ * Function for the playback
+ * @param bufferToFill is the audio buffer
+ */
 void Armonizer::getNextAudioBlock(juce::AudioBuffer<float>& bufferToFill) {
     if (isOn) {
         auto* leftBuffer = bufferToFill.getWritePointer(0);
@@ -94,7 +115,10 @@ void Armonizer::getNextAudioBlock(juce::AudioBuffer<float>& bufferToFill) {
     else updateOscillators();
 }
 
-
+/**
+ * Setters
+ * @param isOn_
+ */
 void Armonizer::setIsOn(bool isOn_){
     isOn = isOn_;
 }
@@ -126,7 +150,7 @@ void Armonizer::createOscillators(int index, double freq) {
         database.pop_back(); // Remove the last item (the oldest one)
     }
     for(int i = 0; i < length; i++){
-        oscillators[i].setGain(gain*30);
+        oscillators[i].setGain(gain);
         double frequence = fromNameToFirstFrequecy(sequence[i]);
         // std::cout << "i: " << i << " Note: " << sequence[i] << " freq: " << frequence << std::endl;
         bool end = true;
@@ -147,106 +171,119 @@ void Armonizer::changeModel(const std::string& filename){
     mm.loadModel(filename);
 }
 
-// Return the oscillator with index number equals to index
+/**
+ * Return the oscillator with index number equals to index
+ */
 SineOscillator Armonizer::getOscillator(int index){
     return oscillators[index];
 }
 
+/**
+ * Notes of The Music Of the Night by Andrew Lloyd Webber
+ */
 void Armonizer::exampleArmonizer(){
     mm.reset();
-    mm.putEvent("F");
     mm.putEvent("E");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
     mm.putEvent("A");
-    mm.putEvent("D");
-    mm.putEvent("D");
-    mm.putEvent("A#");
-    mm.putEvent("C");
-    mm.putEvent("F");
-    mm.putEvent("C");
-    mm.putEvent("D");
-    mm.putEvent("G");
-    mm.putEvent("A#");
-    mm.putEvent("F");
-    mm.putEvent("F");
+    mm.putEvent("B");
+    mm.putEvent("C#");
+    mm.putEvent("D#");
     mm.putEvent("E");
+    mm.putEvent("C#");
+    mm.putEvent("B");
     mm.putEvent("A");
-    mm.putEvent("D");
-    mm.putEvent("D");
-    mm.putEvent("A#");
-    mm.putEvent("C");
-    mm.putEvent("F");
-    mm.putEvent("C");
-    mm.putEvent("D");
-    mm.putEvent("G");
-    mm.putEvent("A#");
-    mm.putEvent("F");
-    mm.putEvent("A");
-    mm.putEvent("A");
-    mm.putEvent("D");
-    mm.putEvent("C");
-    mm.putEvent("A#");
-    mm.putEvent("D");
-    mm.putEvent("G");
-    mm.putEvent("C");
-    mm.putEvent("F");
-    mm.putEvent("A");
-    mm.putEvent("A");
-    mm.putEvent("D");
-    mm.putEvent("C");
-    mm.putEvent("A#");
-    mm.putEvent("D");
-    mm.putEvent("G");
-    mm.putEvent("C");
-    mm.putEvent("F");
-    mm.putEvent("F");
-    mm.putEvent("F");
+    mm.putEvent("G#");
+    mm.putEvent("F#");
     mm.putEvent("E");
-    mm.putEvent("A");
-    mm.putEvent("D");
-    mm.putEvent("D");
-    mm.putEvent("A#");
-    mm.putEvent("C");
-    mm.putEvent("F");
-    mm.putEvent("C");
-    mm.putEvent("D");
-    mm.putEvent("G");
-    mm.putEvent("A#");
-    mm.putEvent("F");
-    mm.putEvent("A");
-    mm.putEvent("A");
-    mm.putEvent("D");
-    mm.putEvent("C");
-    mm.putEvent("A#");
-    mm.putEvent("D");
-    mm.putEvent("G");
-    mm.putEvent("C");
-    mm.putEvent("F");
-    mm.putEvent("A");
-    mm.putEvent("A");
-    mm.putEvent("D");
-    mm.putEvent("C");
-    mm.putEvent("A#");
-    mm.putEvent("D");
-    mm.putEvent("G");
-    mm.putEvent("C");
-    mm.putEvent("F");
-    mm.putEvent("F");
-    mm.putEvent("F");
     mm.putEvent("E");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
+    mm.putEvent("F#");
+    mm.putEvent("E");
+    mm.putEvent("E");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
+    mm.putEvent("F#");
+    mm.putEvent("E");
+    mm.putEvent("D");
+    mm.putEvent("E");
+    mm.putEvent("F#");
+    mm.putEvent("E");
+    mm.putEvent("D");
+    mm.putEvent("D");
+    mm.putEvent("E");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
     mm.putEvent("A");
+    mm.putEvent("B");
+    mm.putEvent("C#");
+    mm.putEvent("D#");
+    mm.putEvent("E");
+    mm.putEvent("C#");
+    mm.putEvent("B");
+    mm.putEvent("A");
+    mm.putEvent("G#");
+    mm.putEvent("F#");
+    mm.putEvent("E");
+    mm.putEvent("B");
+    mm.putEvent("C#");
     mm.putEvent("D");
+    mm.putEvent("E");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
+    mm.putEvent("A");
+    mm.putEvent("B");
+    mm.putEvent("C#");
     mm.putEvent("D");
-    mm.putEvent("A#");
-    mm.putEvent("C");
-    mm.putEvent("F");
-    mm.putEvent("C");
+    mm.putEvent("E");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
+    mm.putEvent("A");
+    mm.putEvent("B");
+    mm.putEvent("A");
+    mm.putEvent("G#");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
+    mm.putEvent("A");
+    mm.putEvent("B");
+    mm.putEvent("A");
+    mm.putEvent("G#");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
+    mm.putEvent("A");
+    mm.putEvent("B");
+    mm.putEvent("A");
+    mm.putEvent("G#");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
+    mm.putEvent("A");
+    mm.putEvent("G#");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
+    mm.putEvent("A");
+    mm.putEvent("B");
+    mm.putEvent("C#");
     mm.putEvent("D");
-    mm.putEvent("G");
-    mm.putEvent("A#");
-    mm.putEvent("F");
-    mm.putEvent("G");
-    mm.putEvent("A#");
-    mm.putEvent("F");
+    mm.putEvent("E");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
+    mm.putEvent("A");
+    mm.putEvent("B");
+    mm.putEvent("A");
+    mm.putEvent("G#");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
+    mm.putEvent("A");
+    mm.putEvent("B");
+    mm.putEvent("A");
+    mm.putEvent("G#");
+    mm.putEvent("F#");
+    mm.putEvent("G#");
+    mm.putEvent("A");
+
+
 }
 
 void Armonizer::initialize(){
@@ -261,14 +298,6 @@ void Armonizer::newSequence(){
 void Armonizer::saveSequence(){
     creation = false;
     std::cout << "New Sequence correctly inserted!" << std::endl;
-    /*
-    std::cout << mm.getModelAsString();
-    for (auto i=0;i<50;++i){
-        state_single next = mm.getEvent();
-        int order = mm.getOrderOfLastEvent();
-        std::cout << "Next state " << next << " order " << order << std::endl;
-    }
-    */
 }
 
 void Armonizer::addSequence(int noteNumber){
@@ -279,6 +308,9 @@ void Armonizer::addSequence(int noteNumber){
     mm.putEvent(note);
 }
 
+/**
+ * Function for the conversion from the Midi Note Number to the name of the note
+ */
 state_single Armonizer::fromNoteNumberToName(int noteNumber){
     switch (noteNumber % 12) {
         case 0:
@@ -310,6 +342,9 @@ state_single Armonizer::fromNoteNumberToName(int noteNumber){
     }
 }
 
+/**
+ * Function for the conversion from the name of the note to the first frequency
+ */
 double Armonizer::fromNameToFirstFrequecy(state_single note){
     double firstFreq;
     if (note == "A") return 440.0/4;
@@ -328,8 +363,6 @@ double Armonizer::fromNameToFirstFrequecy(state_single note){
 }
 
 void Armonizer::resetArmonizer(){
-    armonizer->setLengthOfList(3);
-    armonizer->setMaxOrder(1);
     armonizer->exampleArmonizer();
 }
 
@@ -347,6 +380,9 @@ std::vector<state_sequence> Armonizer::getDatabase() {
     return database;
 }
 
+/**
+ * Functions to write on an external file the midi file
+ */
 void Armonizer::writeToExternalFile(const std::string& filename, int index){
 
     std::ofstream outputFile(filename, std::ios::out);
@@ -416,28 +452,18 @@ void Armonizer::writeMidiFile(const std::string& filename, const std::vector<int
     outputFile.close();
 }
 
-
+/**
+ * Override function to hear the notes when the user is creating his own sequence
+ * @param freq
+ */
 void Armonizer::createOscillators(double freq) {
     double gain = 1.0;
     updateOscillators();
-    std::cout << freq << std::endl;
-    int noteNumber = (int)round(69 + 12 * log2(freq / 440.0));
-    state_single note = fromNoteNumberToName(noteNumber);
     oscillatorDuration = 3;
     // std::cout << note << " This is the first " << std::endl;
     for(int i = 0; i < length; i++){
-        sequence.clear();
-        sequence.push_back(note);
         if(i == 0) oscillators[i].setGain(gain*30);
         else oscillators[i].setGain(0);
-        double frequence = fromNameToFirstFrequecy(sequence[0]);
-        // std::cout << "i: " << i << " Note: " << sequence[i] << " freq: " << frequence << std::endl;
-        bool end = true;
-        // while to take rebase the octave
-        while(end){
-            if(frequence < freq) frequence *= 2;
-            else end = false;
-        }
-        oscillators[i].setFrequency(frequence, sampleRate);
+        oscillators[i].setFrequency(freq, sampleRate);
     }
 }

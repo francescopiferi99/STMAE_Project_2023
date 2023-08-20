@@ -21,19 +21,21 @@ ExamPifAudioProcessorEditor::ExamPifAudioProcessorEditor (ExamPifAudioProcessor&
     addAndMakeVisible(numberOfNotes);
     numberOfNotes.addListener(this);
     numberOfNotes.setRange(1, 60, 1);
-    numberOfNotes.setValue(3);
+    numberOfNotes.setValue(30);
 
-    // Markov order is the
+    // MarkovOrder is the order of the markov Chain
     addAndMakeVisible(markovOrder);
     markovOrder.addListener(this);
-    markovOrder.setRange(1, 6, 1);
-    markovOrder.setValue(1);
+    markovOrder.setRange(1, 4, 1);
+    markovOrder.setValue(2);
 
+    // Slider to set the duration of each note
     addAndMakeVisible(duration);
     duration.addListener(this);
     duration.setRange(0.1, 1, 0.01);
     duration.setValue(0.2);
 
+    // Labels
     numberOfNotesLabel.setText("Number of Notes", juce::dontSendNotification);
     markovOrderLabel.setText("Markov Order", juce::dontSendNotification);
     velocityLabel.setText("Velocity", juce::dontSendNotification);
@@ -46,26 +48,32 @@ ExamPifAudioProcessorEditor::ExamPifAudioProcessorEditor (ExamPifAudioProcessor&
     addAndMakeVisible(markovOrderLabel);
     addAndMakeVisible(velocityLabel);
 
+    // Button to update the values of the sliders
     addAndMakeVisible(sendButton);
     sendButton.addListener(this);
     sendButton.setButtonText("Update Values");
 
+    // Button to start creating
     addAndMakeVisible(createButton);
     createButton.addListener(this);
     createButton.setButtonText("New Pattern");
 
+    // Button to save the the new sequence
     addAndMakeVisible(saveButton);
     saveButton.addListener(this);
     saveButton.setButtonText("Save");
 
+    // Button to restore the values and the markov chain
     addAndMakeVisible(reset);
     reset.addListener(this);
     reset.setButtonText("Reset");
 
+    // Button to save the last sequence
     addAndMakeVisible(saveLastSequence);
     saveLastSequence.addListener(this);
     saveLastSequence.setButtonText("Save Sequence");
 
+    // Combobox to save the sequences
     addAndMakeVisible(saveSequences);
     saveSequences.addItem("Save Your Melody", 1);
     saveSequences.addItem("Save Last Melody", 2);
@@ -158,19 +166,12 @@ void ExamPifAudioProcessorEditor::buttonClicked(juce::Button *button) {
     }
     if(button == &reset){
         armonizer->resetArmonizer();
-        numberOfNotes.setValue(3);
-        markovOrder.setValue(1);
-        duration.setValue(0.1);
-    }
-    if(button == &saveLastSequence){
-        /*
-        std::cout << "=== New Sequence ===" << std::endl;
-        for(int i = 0; i < armonizer->getSequence().size(); i++){
-            std::cout << armonizer->getSequence()[i] << std::endl;
-        }
-         */
-        std::vector<int> notes = {60, 65, 60, 62, 67, 70, 65, 69, 69, 62, 60, 70, 62, 67, 60, 65, 69, 69, 62, 60, 70, 62};
-        armonizer->writeMidiFile("/Users/francescopiferi/CLionProjects/STMAE_Project_2023/src/output.mid", notes);
+        numberOfNotes.setValue(30);
+        markovOrder.setValue(2);
+        duration.setValue(0.2);
+        armonizer->setLengthOfList(static_cast<int>(numberOfNotes.getValue()));
+        armonizer->setMaxOrder(static_cast<int>(markovOrder.getValue()));
+        armonizer->setOscillatorDuration(duration.getValue());
     }
 }
 
@@ -179,7 +180,7 @@ void ExamPifAudioProcessorEditor::comboChanged(juce::ComboBox * combo){
     if(combo == &saveSequences && saveSequences.getSelectedId() < armonizer->getDatabase().size() + 2 && saveSequences.getSelectedId() != 1){
         state_sequence notes = db[saveSequences.getSelectedId()-2];
         std::vector<int> numbers = convert(notes);
-        armonizer->writeMidiFile("/Users/francescopiferi/CLionProjects/STMAE_Project_2023/src/output.mid", numbers);
+        armonizer->writeMidiFile("/Users/francescopiferi/Desktop/output.mid", numbers);
         saveSequences.setSelectedId(1);
     }
 }
