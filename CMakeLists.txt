@@ -39,7 +39,6 @@ target_sources(Piferi_Exam_01
         src/MarkovChain.cpp
         src/SineOscillator.cpp
         src/Armonizer.cpp
-        src/ExamPifAudioProcessorEditorModifyArmonizerPage.cpp
         )
 
 target_compile_definitions(Piferi_Exam_01

@@ -5,7 +5,7 @@
 
   ==============================================================================
 */
-
+#include <__filesystem/path.h>
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
@@ -180,7 +180,9 @@ void ExamPifAudioProcessorEditor::comboChanged(juce::ComboBox * combo){
     if(combo == &saveSequences && saveSequences.getSelectedId() < armonizer->getDatabase().size() + 2 && saveSequences.getSelectedId() != 1){
         state_sequence notes = db[saveSequences.getSelectedId()-2];
         std::vector<int> numbers = convert(notes);
-        armonizer->writeMidiFile("/Users/francescopiferi/Desktop/output.mid", numbers);
+        std::string path = std::filesystem::path(__FILE__).parent_path().string() + "/output.mid";
+
+        armonizer->writeMidiFile(path, numbers);
         saveSequences.setSelectedId(1);
     }
 }
